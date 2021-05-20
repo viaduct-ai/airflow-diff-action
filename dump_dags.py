@@ -23,4 +23,8 @@ def dump_dags(outfile):
 
 
 if __name__ == '__main__':
-    dump_dags(sys.stdout)
+    if len(sys.argv) != 2:
+        print('Usage: dump_dags.py <output filename>')
+        sys.exit(1)
+    with open(sys.argv[1], 'w') as outfile:
+        dump_dags(outfile)
