@@ -1,0 +1,7 @@
+name: 'Diff Airflow DAG'
+description: 'Gets diff of airflow DAG.'
+inputs:
+outputs:
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
