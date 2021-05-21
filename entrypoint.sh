@@ -7,6 +7,7 @@ export AIRFLOW__CORE__PLUGINS_FOLDER=${GITHUB_WORKSPACE}/plugins/
 export AIRFLOW__CORE__LOGS_FOLDER="/tmp/logs/"
 export FERNET_KEY=$(openssl rand -base64 32)
 RESULTS_DIR=${GITHUB_WORKSPACE}/airflow-diff-results
+mkdir -p $RESULTS_DIR
 echo Base ref is $GITHUB_BASE_REF
 airflow initdb
 python /dump_dags.py /tmp/current
@@ -19,7 +20,7 @@ for dag_id in $DAG_IDS; do
     if [[ ! -f "/tmp/current/$dag_id" ]]; then
         SUMMARY+="**DAG deleted: $dag_id**"$'\n\n'
     elif [[ ! -f "/tmp/base/$dag_id" ]]; then
-        CONTENT=$(< /tmp/base/$dag_id)
+        CONTENT=$(< /tmp/current/$dag_id)
         SUMMARY+="**DAG added: $dag_id**"$'\n\n```\n'"$CONTENT"$'\n```\n\n'
         HAS_DIFF=1
     else
