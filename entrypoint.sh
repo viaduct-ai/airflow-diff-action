@@ -12,3 +12,4 @@ python /dump_dags.py /tmp/current.txt
 git checkout $GITHUB_BASE_REF
 python /dump_dags.py /tmp/base.txt
 diff=$(diff -u /tmp/base.txt /tmp/current.txt)
+exit 0
