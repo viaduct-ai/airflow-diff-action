@@ -22,7 +22,7 @@ for dag_id in $DAG_IDS; do
         DIFF=$(diff -u /tmp/base/$dag_id /tmp/current/$dag_id)
         retVal=$?
         if [ $retVal -ne 0 ]; then
-            SUMMARY+="**DAG modified: $dag_id**"$'\n\n'"$DIFF"$'\n\n'
+            SUMMARY+="**DAG modified: $dag_id**"$'\n\n```\n'"$DIFF"$'\n```\n\n'
         fi
     fi
 done
