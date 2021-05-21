@@ -4,7 +4,7 @@ import os, sys
 
 
 def dump_dags(output_base_path):
-    os.mkdirs(output_base_path, exist_ok=True)
+    os.makedirs(output_base_path, exist_ok=True)
     bag = DagBag()
     for dag_id in sorted(bag.dag_ids):
         dag = bag.get_dag(dag_id)
