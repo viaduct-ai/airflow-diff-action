@@ -15,22 +15,25 @@ python /dump_dags.py /tmp/base
 DAG_IDS=$(basename -a /tmp/base/* /tmp/current/* | sort | uniq)
 SUMMARY=""
 for dag_id in $DAG_IDS; do
+    HAS_DIFF=0
     if [[ ! -f "/tmp/current/$dag_id" ]]; then
         SUMMARY+="**DAG deleted: $dag_id**"$'\n\n'
-        continue
-    fi
-    if [[ ! -f "/tmp/base/$dag_id" ]]; then
+    elif [[ ! -f "/tmp/base/$dag_id" ]]; then
         CONTENT=$(< /tmp/base/$dag_id)
         SUMMARY+="**DAG added: $dag_id**"$'\n\n```\n'"$CONTENT"$'\n```\n\n'
+        HAS_DIFF=1
     else
         DIFF=$(diff -u /tmp/base/$dag_id /tmp/current/$dag_id)
         retVal=$?
         if [ $retVal -ne 0 ]; then
             SUMMARY+="**DAG modified: $dag_id**"$'\n\n```\n'"$DIFF"$'\n```\n\n'
+            HAS_DIFF=1
         fi
     fi
-    cp /tmp/current/$dag_id $RESULTS_DIR/$dag_id.txt
-    airflow show_dag -s $RESULTS_DIR/$dag_id.png $dag_id
+    if [[ $HAS_DIFF -ne 0]]; then 
+        cp /tmp/current/$dag_id $RESULTS_DIR/$dag_id.txt
+        airflow show_dag -s $RESULTS_DIR/$dag_id.png $dag_id
+    fi
 done
 SUMMARY="${SUMMARY//'%'/'%25'}"
 SUMMARY="${SUMMARY//$'\n'/'%0A'}"
