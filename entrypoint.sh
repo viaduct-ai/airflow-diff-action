@@ -15,14 +15,14 @@ DAG_IDS=$(basename -a /tmp/base/* /tmp/current/* | sort | uniq)
 SUMMARY=""
 for dag_id in $DAG_IDS; do
     if [[ ! -f "/tmp/base/$dag_id" ]]; then
-        SUMMARY+="DAG added: $dag_id\n\n"
+        SUMMARY+="**DAG added: $dag_id**\n\n"
     elif [[ ! -f "/tmp/current/$dag_id" ]]; then
-        SUMMARY+="DAG deleted: $dag_id\n\n"
+        SUMMARY+="**DAG deleted: $dag_id**\n\n"
     else
-        DIFF=$(diff -u /tmp/base.txt /tmp/current.txt)
+        DIFF=$(diff -u /tmp/base/$dag_id /tmp/current/$dag_id)
         retVal=$?
         if [ $retVal -ne 0 ]; then
-            SUMMARY+="DAG modified: $dag_id\n\n$DIFF\n\n"
+            SUMMARY+="**DAG modified: $dag_id**\n\n$DIFF\n\n"
         fi
     fi
 done
