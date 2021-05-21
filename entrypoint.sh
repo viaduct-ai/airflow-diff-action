@@ -30,7 +30,7 @@ for dag_id in $DAG_IDS; do
             HAS_DIFF=1
         fi
     fi
-    if [[ $HAS_DIFF -ne 0]]; then 
+    if [ $HAS_DIFF -ne 0 ] ; then 
         cp /tmp/current/$dag_id $RESULTS_DIR/$dag_id.txt
         airflow show_dag -s $RESULTS_DIR/$dag_id.png $dag_id
     fi
