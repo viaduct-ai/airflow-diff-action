@@ -13,7 +13,7 @@ git checkout $GITHUB_BASE_REF
 python /dump_dags.py /tmp/base
 DAG_IDS=$(basename -a /tmp/base/* /tmp/current/* | sort | uniq)
 SUMMARY=""
-for dag_id in DAG_IDS; do
+for dag_id in $DAG_IDS; do
     if [[ ! -f "/tmp/base/$dag_id" ]]; then
         SUMMARY+="DAG added: $dag_id\n\n"
     elif [[ ! -f "/tmp/current/$dag_id" ]]; then
