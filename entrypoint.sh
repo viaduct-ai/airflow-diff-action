@@ -8,11 +8,12 @@ export AIRFLOW__CORE__LOGS_FOLDER="/tmp/logs/"
 export FERNET_KEY=$(openssl rand -base64 32)
 RESULTS_DIR=${GITHUB_WORKSPACE}/airflow-diff-results
 mkdir -p $RESULTS_DIR
-echo Base ref is $GITHUB_BASE_REF
+echo Base ref is $GITHUB_BASE_REF, head ref is $GITHUB_HEAD_REF
 airflow initdb
 python /dump_dags.py /tmp/current
 git checkout $GITHUB_BASE_REF
 python /dump_dags.py /tmp/base
+git checkout $GITHUB_HEAD_REF # Revert to head for printing dag below
 DAG_IDS=$(basename -a /tmp/base/* /tmp/current/* | sort | uniq)
 SUMMARY=""
 for dag_id in $DAG_IDS; do
