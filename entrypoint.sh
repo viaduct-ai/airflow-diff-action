@@ -11,5 +11,5 @@ airflow initdb
 python /dump_dags.py /tmp/current.txt
 git checkout $GITHUB_BASE_REF
 python /dump_dags.py /tmp/base.txt
-echo "::set-output name=$(diff -u /tmp/base.txt /tmp/current.txt)"
+echo "::set-output name=diff::$(diff -u /tmp/base.txt /tmp/current.txt)"
 exit 0
