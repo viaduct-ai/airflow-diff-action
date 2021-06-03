@@ -45,7 +45,7 @@ for dag_id in $DAG_IDS; do
     fi
 done
 if [ -n "$S3_PROXY_URL" ] && [ "$(ls $RESULTS_DIR)" ]; then
-    aws cp $RESULTS_DIR "s3://$S3_BUCKET/$S3_BASE_DIR/$RUN_ID" --recursive
+    aws s3 cp $RESULTS_DIR "s3://$S3_BUCKET/$S3_BASE_DIR/$RUN_ID" --recursive
 fi
 SUMMARY="${SUMMARY//'%'/'%25'}"
 SUMMARY="${SUMMARY//$'\n'/'%0A'}"
