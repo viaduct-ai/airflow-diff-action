@@ -5,7 +5,11 @@ FROM apache/airflow:1.10.10-python3.7
 
 USER root
 
-RUN apt-get update && apt-get install -y git graphviz
+RUN apt-get update && apt-get install -y git graphviz curl unzip groff uuid-runtime
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+	./aws/install
 
 COPY entrypoint.sh /entrypoint.sh
 COPY dump_dags.py /dump_dags.py
