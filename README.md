@@ -24,18 +24,30 @@ jobs:
       - uses: viaduct-ai/airflow-diff-action@main
         id: diff
       - uses: actions/github-script@v4
-        if: ${{ steps.diff.outputs.diff }}
         env:
           DIFF: ${{ steps.diff.outputs.diff }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const { DIFF } = process.env
+            const { data: comments } = await github.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (let c of comments) {
+              if (c.user.login == 'github-actions[bot]' && c.body.startsWith('**Airflow DAG diff**')) {
+                github.issues.deleteComment({
+                  comment_id: c.id,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                })
+              }
+            }
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '**Airflow DAG diff**\n\nView images of modified DAGs in the GitHub Action.\n\n'+DIFF,
+              body: '**Airflow DAG diff**\n\n'+process.env.DIFF,
             })
       - uses: actions/upload-artifact@v2
         with:

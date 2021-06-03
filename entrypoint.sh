@@ -30,7 +30,7 @@ for dag_id in $DAG_IDS; do
         DIFF=$(diff -u /tmp/base/$dag_id /tmp/current/$dag_id)
         if [ -n "$DIFF" ]; then
             # Strip first 2 lines with the filenames.
-            DIFF=$(echo "$DIFF" | tail -n +2)
+            DIFF=$(echo "$DIFF" | tail -n +3)
             SUMMARY+="**DAG modified: $dag_id**"
         fi
     fi
@@ -46,6 +46,9 @@ for dag_id in $DAG_IDS; do
         SUMMARY+=$'\n\n```\n'"$DIFF"$'\n```\n\n'
     fi
 done
+if [ -z "$SUMMARY" ]; then
+    SUMMARY='No diff'
+fi
 if [ -n "$S3_PROXY_URL" ] && [ "$(ls $RESULTS_DIR)" ]; then
     aws s3 cp $RESULTS_DIR "s3://$S3_BUCKET/$S3_BASE_DIR/$RUN_ID" --recursive
 fi
