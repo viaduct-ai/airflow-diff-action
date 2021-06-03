@@ -3,7 +3,11 @@ A GitHub action to show diffs of Airflow DAGs.
 
 Outputs a textual diff of the DAG dependencies, and also generates PNG images of the rendered DAG structure.
 
-Example usage that creates a pull request comment with the diff, and uploads the PNG images as artifacts.
+Example usage that:
+
+* creates a pull request comment with the diff
+* deletes previous pull request comments
+* uploads the diffs and PNG images as artifacts
 
 ```yaml
 name: Diff Airflow DAG

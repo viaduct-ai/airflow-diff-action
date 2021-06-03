@@ -29,6 +29,8 @@ for dag_id in $DAG_IDS; do
     else
         DIFF=$(diff -u /tmp/base/$dag_id /tmp/current/$dag_id)
         if [ -n "$DIFF" ]; then
+            # Strip first 2 lines with the filenames.
+            DIFF=$(echo "$DIFF" | tail -n +2)
             SUMMARY+="**DAG modified: $dag_id**"
         fi
     fi
