@@ -12,7 +12,6 @@ def dump_dags(output_base_path):
         with open(os.path.join(output_base_path, dag_id), 'w') as outfile:
             adj = defaultdict(list)  # Adjacency list of DAG.
             for task in dag.tasks:
-                task.dry_run()  # Perform dry run to validate template fields.
                 for upstream_task_id in task.upstream_task_ids:
                     adj[upstream_task_id].append(task.task_id)
 

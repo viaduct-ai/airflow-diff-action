@@ -17,6 +17,7 @@ python /dump_dags.py /tmp/base
 git checkout $GITHUB_HEAD_REF # Revert to head for printing dag below
 DAG_IDS=$(basename -a /tmp/base/* /tmp/current/* | sort | uniq)
 SUMMARY=""
+IS_VALID=1
 for dag_id in $DAG_IDS; do
     DIFF=''
     if [[ ! -f "/tmp/current/$dag_id" ]]; then
@@ -45,9 +46,16 @@ for dag_id in $DAG_IDS; do
         fi
         SUMMARY+=$'\n\n```\n'"$DIFF"$'\n```\n\n'
     fi
+    # Attempt to render template to check jinja.
+    airflow backfill --dry_run --start_date 2001-01-01 --end_date 2001-01-01 $dag_id
+    retVal=$?
+    if [ $retVal -ne 0 ]; then
+        SUMMARY+=$'\n\nFailed to render DAG '"$dag_id"$'\n\n'
+        IS_VALID=0
+    fi
 done
 if [ -z "$SUMMARY" ]; then
-    SUMMARY='No diff'
+    SUMMARY='No diff in DAG structure'
 fi
 if [ -n "$S3_PROXY_URL" ] && [ "$(ls $RESULTS_DIR)" ]; then
     aws s3 cp $RESULTS_DIR "s3://$S3_BUCKET/$S3_BASE_DIR/$RUN_ID" --recursive
@@ -56,4 +64,5 @@ SUMMARY="${SUMMARY//'%'/'%25'}"
 SUMMARY="${SUMMARY//$'\n'/'%0A'}"
 SUMMARY="${SUMMARY//$'\r'/'%0D'}"
 echo "::set-output name=diff::$SUMMARY"
+echo "::set-output name=is_valid::$IS_VALID"
 exit 0

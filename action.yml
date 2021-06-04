@@ -3,6 +3,8 @@ description: 'Gets diff of airflow DAG.'
 outputs:
   diff:
     description: 'The diff of the DAGs.'
+  is_valid:
+    description: '1 if DAGs rendered successfully, else 0.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
