@@ -11,9 +11,15 @@ RESULTS_DIR=${GITHUB_WORKSPACE}/airflow-diff-results
 mkdir -p $RESULTS_DIR
 echo Base ref is $GITHUB_BASE_REF, head ref is $GITHUB_HEAD_REF
 airflow initdb
-python /dump_dags.py /tmp/current
+if ! python /dump_dags.py /tmp/current ; then
+    echo "::set-output name=diff::ERROR: Failed to parse DAGs."
+    exit 0 # Avoid failing the script so the PR comment can be posted.
+fi
 git checkout $GITHUB_BASE_REF
-python /dump_dags.py /tmp/base
+if ! python /dump_dags.py /tmp/base ; then
+    echo "::set-output name=diff::ERROR: Failed to parse base DAGs."
+    exit 0 # Avoid failing the script so the PR comment can be posted.
+fi
 git checkout $GITHUB_HEAD_REF # Revert to head for printing dag below
 DAG_IDS=$(basename -a /tmp/base/* /tmp/current/* | sort | uniq)
 SUMMARY=""
