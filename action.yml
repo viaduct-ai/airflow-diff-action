@@ -8,10 +8,12 @@ inputs:
 outputs:
   diff:
     description: 'The diff of the DAGs.'
+    value: ${{ steps.run.outputs.diff }}
 runs:
   using: 'composite'
   steps:
-    - run: |
+    - id: run
+      run: |
         cd ${{ github.action_path }}
         docker build . --build-arg BASE_IMAGE=${{ inputs.base-image }} -t airflow-diff-image
         env > /tmp/env
