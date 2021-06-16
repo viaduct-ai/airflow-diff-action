@@ -12,6 +12,7 @@ runs:
   using: 'composite'
   steps:
     - run: |
+        cd ${{ github.action_path }}
         docker build . --build-arg BASE_IMAGE=${{ inputs.base-image }} -t airflow-diff-image
         env > /tmp/env
         docker run --rm -v $(pwd):/github/workspace --workdir /github/workspace --env-file /tmp/env airflow-diff-image
