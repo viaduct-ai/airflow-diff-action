@@ -6,6 +6,7 @@ import os, sys
 def dump_dags(output_base_path):
     os.makedirs(output_base_path, exist_ok=True)
     bag = DagBag()
+    assert not dagbag.import_errors
     for dag_id in sorted(bag.dag_ids):
         dag = bag.get_dag(dag_id)
 
