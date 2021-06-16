@@ -1,4 +1,5 @@
-FROM apache/airflow:1.10.10-python3.7
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 
 # Note: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#docker-container-filesystem
 # "GitHub Actions must be run by the default Docker user (root)."

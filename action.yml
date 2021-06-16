@@ -1,8 +1,18 @@
 name: 'Diff Airflow DAG'
 description: 'Gets diff of airflow DAG.'
+inputs:
+  base-image:
+    description: 'Docker base image'
+    required: false
+    default: 'apache/airflow:1.10.10-python3.7'
 outputs:
   diff:
     description: 'The diff of the DAGs.'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'composite'
+  steps:
+    - run: |
+        docker build . --build-arg BASE_IMAGE=${{ inputs.base-image }} -t airflow-diff-image
+        env > /tmp/env
+        docker run --rm -v $(pwd):/github/workspace --workdir /github/workspace --env-file /tmp/env airflow-diff-image
+      shell: bash
