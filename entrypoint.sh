@@ -8,6 +8,7 @@ export AIRFLOW__CORE__LOGS_FOLDER="/tmp/logs/"
 export FERNET_KEY=$(openssl rand -base64 32)
 RUN_ID=$(uuidgen)
 RESULTS_DIR=${GITHUB_WORKSPACE}/airflow-diff-results
+git config --global --add safe.directory $GITHUB_WORKSPACE
 mkdir -p $RESULTS_DIR
 echo Base ref is $GITHUB_BASE_REF, head ref is $GITHUB_HEAD_REF
 airflow initdb
