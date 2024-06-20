@@ -4,7 +4,7 @@ inputs:
   base-image:
     description: 'Docker base image'
     required: false
-    default: 'apache/airflow:1.10.10-python3.7'
+    default: 'apache/airflow:latest-python3.10'
 outputs:
   diff:
     description: 'The diff of the DAGs.'
